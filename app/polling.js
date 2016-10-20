@@ -3,7 +3,7 @@ const errorCodes = require('./errorCodes');
 const moment = require('moment');
 const settings = require('./settings');
 
-module.exports = (location, cb) => {
+module.exports = (location, scan, cb) => {
 
   var options = {
     'method': 'GET',
@@ -14,10 +14,10 @@ module.exports = (location, cb) => {
       'cache-control': 'no-cache'
     }
   };
-  console.log('date ' + moment().format('MMMM Do YYYY, h:mm:ss a'));
+  //console.log('date ' + moment().format('MMMM Do YYYY, h:mm:ss a'));
 
   setTimeout(() => {
-    console.log('date ' + moment().format('MMMM Do YYYY, h:mm:ss a'));
+    //console.log('date ' + moment().format('MMMM Do YYYY, h:mm:ss a'));
     var req = http.request(options, function (response) {
       console.log(response.statusCode + ', ' + errorCodes.polling[response.statusCode]);
 
@@ -30,7 +30,7 @@ module.exports = (location, cb) => {
       response.on('end', function () {
         var body = Buffer.concat(chunks);
         body = body.toString();
-        cb(body);
+        cb(body, scan);
       });
     });
 

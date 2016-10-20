@@ -36,7 +36,7 @@ module.exports = (scan, cb) => {
     response.on('end', () => {
       //var body = Buffer.concat(chunks);
       const location = url.parse(response.headers.location, true);
-      cb(location);
+      cb(location, scan);
     });
   });
 

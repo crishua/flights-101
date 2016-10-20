@@ -2,3 +2,5 @@
 node_modules
 results/*.json
 .idea
+app/routes.js
+npm-debug.log

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app/live.js",
+    "live": "node app/live.js",
     "import": "node app/importDataBase.js"
   },
   "author": "Moises Sacal",
