@@ -7,7 +7,7 @@ module.exports = {
   api: process.env.API,
   db: {
     dialect: 'mysql',
-    url: process.env.DBURL,
+    url: process.env.DB_URL,
     username: process.env.DB_USR,
     password: process.env.DB_PSW
   }

@@ -1,35 +1,83 @@
+'use strict';
+
 const fs = require('fs');
-const Itinerary = require('./db/itinerary');
-const Agent = require('./db/agent');
-const PricingOption = require('./db/pricingOption');
 
-//load file
+var agentsImport = require('./import/agents');
+var carriersImport = require('./import/carriers');
+var placesImport = require('./import/places');
+var legsImport = require('./import/legs');
+var segmentsImport = require('./import/segments');
+var itinerariesImport = require('./import/itineraries');
 
-fs.readFile(__dirname + '/' + process.argv[2], 'utf8', (err, data) => {
-  if (err) {
-    throw new Error(err);
-  }
-  //decode JSON
-  const json = data.toJSON();
+const dir = __dirname + '/results';
+const files = fs.readdirSync(dir);
 
-  //from object create agent
-  json.Agents.map((agent) => {
-    Agent.createAgent(agent)
+function fileToJSON(file) {
+  return new Promise((resolve, reject) => {
+    if (file !== '.resultfileshere') {
+
+      fs.readFile(dir + '/' + file, 'utf8', (err, data) => {
+        if (err) {
+          reject(err);
+        }
+        //decode JSON
+        try {
+          resolve(JSON.parse(data));
+        } catch (error) {
+          reject(error);
+        }
+
+      })
+    }
   });
-  //from object create itinerary
-  json.Itineraries.map((itinerary) => {
-    const iti = Itinerary.createItinerary({
-      OutboundLegId: itinerary.OutboundLegId,
-      InboundLegId: itinerary.InboundLegId
-    });
-    PricingOption.createOption({
-      Agent: iti.Agents[0] || null,
-      QuoteAgeInMinutes: iti.QuoteAgeInMinutes || null,
-      Price: iti.Price || null,
-      DeeplinkUrl: iti.DeeplinkUrl || null
+}
+
+var dumpFiles = function (files) {
+  return files.map((file) => {
+    // console.log(file + ' reading');
+    return new Promise((resolve, reject) => {
+      var json = {};
+      fileToJSON(file)
+        .then((res) => {
+          json = res;
+          // console.log('agents');
+          return agentsImport(json.Agents)
+        })
+        .then(() => {
+          // console.log('places');
+          return placesImport(json.Places)
+        })
+        .then(() => {
+          // console.log('carriers');
+          return carriersImport(json.Carriers)
+        })
+        .then(() => {
+          // console.log('segments');
+          return segmentsImport(json.Segments)
+        })
+        .then(() => {
+          // console.log('legs');
+          return legsImport(json.Legs)
+        })
+        .then(() => {
+          // console.log('itineraries');
+          return itinerariesImport(json.Itineraries)
+        })
+        .then(() => {
+          resolve('done: ' + file);
+        })
+        .catch((error) => {
+          reject('error: ' + error + ' in ' + file)
+        })
     });
   });
-  //when creating itinerary, create pricingOption
+};
 
-});
-
+var dumps = dumpFiles(files);
+Promise
+  .all(dumps)
+  .then((res) => {
+    console.log(res);
+  }, reason => {
+    console.log(reason)
+  });

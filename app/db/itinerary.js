@@ -1,45 +1,39 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const settings = require('./settings');
-const sequelize = new Sequelize(`${settings.db.dialect}://${config.db.username}:${config.db.password}@${config.db.url}`);
+const settings = require('../settings');
+const sequelize = new Sequelize(
+  `${settings.db.dialect}://${settings.db.username}:${settings.db.password}@${settings.db.url}`,
+  {logging: false});
 
 const pricingOption = require('./pricingOption');
 
-const Itinerary = sequelize.define('itinerary', {
+const Itinerary = sequelize.define('Itinerary', {
+  Id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    defaultValue: null
+  },
   OutboundLegId: {
     type: Sequelize.STRING,
-    primaryKey: true,
-    autoIncrement: false,
-    field:'outboundLegId'
+    field:'OutboundLegId'
   },
   InboundLegId: {
     type: Sequelize.STRING,
-    primaryKey: true,
-    autoIncrement: false,
-    field:'inboundLegId'
-  },
-  PricingOption: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    field:'options',
-    references: {
-      model: pricingOption.id,
-      key: 'pricingOptionId'
-    },
+    field:'InboundLegId'
   }
 }, {
   freezeTableName: true,
-  timestamps: false
+  timestamps: true
 });
 
 module.exports.Itinerary = Itinerary;
 
 function createItinerary(itinerary) {
   return Itinerary.create({
-    OutboundLegId: itinerary.outboundLegId,
-    InboundLegId: itinerary.inBoundLegId,
-    Options: itinerary.pricingOptionId
+    OutboundLegId: itinerary.OutboundLegId,
+    InboundLegId: itinerary.InboundLegId
   });
 }
 

@@ -1,35 +1,37 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const settings = require('./settings');
-const sequelize = new Sequelize(`${settings.db.dialect}://${config.db.username}:${config.db.password}@${config.db.url}`);
+const settings = require('../settings');
+const sequelize = new Sequelize(
+  `${settings.db.dialect}://${settings.db.username}:${settings.db.password}@${settings.db.url}`,
+  {logging: false});
 
-const Agent = sequelize.define('agent', {
+const Agent = sequelize.define('Agent', {
   Id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: false,
-    field:'id'
+    field:'Id'
   },
   Name: {
     type: Sequelize.STRING,
-    field: 'agent'
+    field: 'Name'
   },
   ImageUrl: {
     type: Sequelize.STRING,
-    field: 'imageUrl'
+    field: 'ImageUrl'
   },
   Status: {
     type: Sequelize.STRING,
-    field: 'status'
+    field: 'Status'
   },
   OptimisedForMobile: {
-    type: Sequelize.STRING,
-    field: 'optimisedForMobile'
+    type: Sequelize.BOOLEAN,
+    field: 'OptimisedForMobile'
   },
   Type: {
     type: Sequelize.STRING,
-    field: 'type'
+    field: 'Type'
   }
 }, {
   freezeTableName: true,
@@ -40,13 +42,23 @@ module.exports.Agent = Agent;
 
 function createAgent(agent) {
   return Agent.create({
-    ID: agent.Id,
+    Id: agent.Id,
     Name: agent.Name,
     ImageUrl: agent.ImageUrl,
     Status: agent.Status,
     OptimisedForMobile:agent.OptimisedForMobile,
     Type: agent.Type
+  }, {
+    ignoreDuplicates: true
   });
 }
 
 module.exports.createAgent = createAgent;
+
+function createAgents(agents) {
+  return Agent.bulkCreate(agents, {
+    ignoreDuplicates: true
+  });
+}
+
+module.exports.createAgents = createAgents;

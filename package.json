@@ -11,6 +11,7 @@
   "dependencies": {
     "dotenv": "^2.0.0",
     "moment": "^2.15.1",
+    "mysql": "^2.11.1",
     "querystring": "^0.2.0",
     "sequelize": "^3.24.3"
   },
