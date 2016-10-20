@@ -17,15 +17,19 @@ const Itinerary = sequelize.define('Itinerary', {
   },
   OutboundLegId: {
     type: Sequelize.STRING,
-    field:'OutboundLegId'
+    field: 'OutboundLegId'
   },
   InboundLegId: {
     type: Sequelize.STRING,
-    field:'InboundLegId'
+    field: 'InboundLegId'
+  },
+  FileName: {
+    type: Sequelize.STRING,
+    field: 'FileName'
   }
 }, {
   freezeTableName: true,
-  timestamps: true
+  timestamps: false
 });
 
 module.exports.Itinerary = Itinerary;
@@ -33,7 +37,8 @@ module.exports.Itinerary = Itinerary;
 function createItinerary(itinerary) {
   return Itinerary.create({
     OutboundLegId: itinerary.OutboundLegId,
-    InboundLegId: itinerary.InboundLegId
+    InboundLegId: itinerary.InboundLegId,
+    FileName: itinerary.FileName
   });
 }
 

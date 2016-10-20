@@ -27,7 +27,7 @@ var writeFile = (location) => {
       iti = JSON.parse(iti);
       console.log('Status:' + iti.Status);
       const name = `_${scan.originPlace}_${scan.destinationPlace}_`;
-      fs.writeFile(__dirname + '/results/itinerary' + name + format + '.json', JSON.stringify(iti), (err) => {
+      fs.writeFile(settings.import + '/itinerary' + name + format + '.json', JSON.stringify(iti), (err) => {
         if (err) {
           throw new Error(err);
         }

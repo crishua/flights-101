@@ -4,6 +4,7 @@ dotenv.config();
 module.exports = {
   url: 'api.skyscanner.net',
   endpoint: '/apiservices/pricing/v1.0/',
+  pollingDir: process.env.POL,
   api: process.env.API,
   db: {
     dialect: 'mysql',
