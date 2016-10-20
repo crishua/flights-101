@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   {logging: false});
 
 const agent = require('./agent');
+const itinerary = require('./itinerary');
 
 const PricingOption = sequelize.define('pricingOption', {
   Id: {
@@ -20,7 +21,7 @@ const PricingOption = sequelize.define('pricingOption', {
     field: 'AgentId',
     references: {
       model: agent.Id,
-      key: 'AgentId'
+      key: 'Id'
     }
   },
   QuoteAgeInMinutes: {
@@ -31,9 +32,13 @@ const PricingOption = sequelize.define('pricingOption', {
     type: Sequelize.FLOAT,
     field: 'Price'
   },
-  DeeplinkUrl: {
-    type: Sequelize.STRING,
-    field: 'DeeplinkUrl'
+  ItineraryId: {
+    type: Sequelize.INTEGER,
+    field: 'ItineraryId',
+    references: {
+      model: itinerary.Id,
+      key: 'Id'
+    }
   }
 }, {
   freezeTableName: true,
@@ -44,10 +49,10 @@ module.exports.PricingOption = PricingOption;
 
 function createPricingOption(pricingOption) {
   return PricingOption.create({
-    Id: pricingOption.Id,
     AgentId: pricingOption.AgentId,
     QuoteAgeInMinutes: pricingOption.QuoteAgeInMinutes,
-    Price: pricingOption.Price
+    Price: pricingOption.Price,
+    ItineraryId: pricingOption.ItineraryId
   });
 }
 
