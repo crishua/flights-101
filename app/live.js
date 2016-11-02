@@ -58,8 +58,8 @@ livePoll.on('event', () => {
       groupPricing: 'true',
       originPlace: routes[routeIndex].in,
       destinationPlace: routes[routeIndex].out,
-      outboundDate: dates[dateIndex].out,//'2016-11-04',
-      inboundDate: dates[dateIndex].in,//2016-11-11',
+      outboundDate: dates[dateIndex].out,
+      inboundDate: dates[dateIndex].in,
       adults: '1'
     };
     console.log(routeIndex + ': ' + routes[routeIndex].in + ': ' + routes[routeIndex].out);
