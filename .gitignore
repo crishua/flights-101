@@ -1,6 +1,7 @@
 .env
 node_modules
 results/*.json
+results/t
 .idea
 app/routes.js
 npm-debug.log
