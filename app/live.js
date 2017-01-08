@@ -4,8 +4,8 @@ const fs = require('fs');
 const moment = require('moment');
 const EventEmitter = require('events');
 
-class MyEmitter extends EventEmitter {
-}
+class MyEmitter extends EventEmitter {}
+
 const routes = require('./routes');
 const dates = require('./dates');
 const session = require('./session');
@@ -16,7 +16,7 @@ let routeIndex = 0;
 let dateIndex = 0;
 const livePoll = new MyEmitter();
 
-const dir = settings.pollingDir;
+const dir = settings.liveDir;
 
 const writeFile = (location, scan) => {
   polling(location, scan, (iti, scan) => {
