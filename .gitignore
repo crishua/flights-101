@@ -5,4 +5,4 @@ results/t
 .idea
 app/routes.js
 npm-debug.log
-routes/*
+routes/*.js
