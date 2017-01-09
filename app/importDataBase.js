@@ -10,7 +10,7 @@ var legsImport = require('./import/legs');
 var segmentsImport = require('./import/segments');
 var itinerariesImport = require('./import/itineraries');
 
-const dir = settings.pollingDir;
+const dir = settings.importDir;
 const files = fs.readdirSync(dir);
 
 function fileToJSON(file) {
@@ -62,7 +62,9 @@ var dumpFiles = function (files) {
         })
         .then(() => {
           // console.log('itineraries');
-          return itinerariesImport(json.Itineraries, file)
+          let country = json.Query.Country;
+          let currency = json.Query.Currency;
+          return itinerariesImport(json.Itineraries, file, country, currency)
         })
         .then(() => {
           resolve('done: ' + file);

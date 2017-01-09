@@ -9,7 +9,7 @@ DB_PSW=scanner
 POL=Your polling directory here
 ```
 
-app/routes.js
+/routes.js
 
 ```javascript
 module.exports = [
@@ -18,7 +18,7 @@ module.exports = [
 ];
 ```
 
-app/dates.js
+/dates.js
 
 ```javascript
   {out: '2016-11-04', in: '2016-11-11'},

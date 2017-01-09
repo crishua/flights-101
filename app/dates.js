@@ -1,5 +1,1 @@
-module.exports = [
-  {out: '2016-11-04', in: '2016-11-11'},
-  {out: '2016-11-05', in: '2016-11-12'},
-  {out: '2016-11-06', in: '2016-11-13'}
-];
+module.exports = require('../routes/dates') || [];

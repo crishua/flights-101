@@ -5,6 +5,8 @@ module.exports = {
   url: 'api.skyscanner.net',
   endpoint: '/apiservices/pricing/v1.0/',
   pollingDir: process.env.POL,
+  liveDir: process.env.LIV,
+  importDir: process.env.IMP,
   api: process.env.API,
   db: {
     dialect: 'mysql',
