@@ -1,4 +1,4 @@
-const Segment = require('../db/Segment');
+const Segment = require('../db/segment');
 
 const segments = (Segments) => {
   return new Promise((resolve, reject) => {

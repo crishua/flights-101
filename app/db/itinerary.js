@@ -26,6 +26,14 @@ const Itinerary = sequelize.define('Itinerary', {
   FileName: {
     type: Sequelize.STRING,
     field: 'FileName'
+  },
+  Country: {
+    type: Sequelize.STRING,
+    field: 'Country'
+  },
+  Currency: {
+    type: Sequelize.STRING,
+    field: 'Currency'
   }
 }, {
   freezeTableName: true,
@@ -38,7 +46,9 @@ function createItinerary(itinerary) {
   return Itinerary.create({
     OutboundLegId: itinerary.OutboundLegId,
     InboundLegId: itinerary.InboundLegId,
-    FileName: itinerary.FileName
+    FileName: itinerary.FileName,
+    Country: itinerary.Country,
+    Currency: itinerary.Currency
   });
 }
 
