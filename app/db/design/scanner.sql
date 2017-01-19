@@ -104,6 +104,8 @@ CREATE TABLE IF NOT EXISTS `scanner`.`Itinerary` (
   `OutboundLegId` VARCHAR(200) NULL DEFAULT NULL,
   `InboundLegId` VARCHAR(200) NULL DEFAULT NULL,
   `FileName` VARCHAR(200) NULL,
+  `Country` VARCHAR(45) NULL,
+  `Currency` VARCHAR(45) NULL,
   PRIMARY KEY (`Id`))
 ENGINE = InnoDB;
 

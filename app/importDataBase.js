@@ -76,11 +76,14 @@ var dumpFiles = function (files) {
   });
 };
 
-var dumps = dumpFiles(files);
-Promise
-  .all(dumps)
-  .then((res) => {
-    console.log(res);
-  }, reason => {
-    console.log(reason)
-  });
+dumpFiles(files)
+  .reduce((p, f) => {
+    return p
+      .then(f)
+      .catch((err) => {
+        let msg = 'dumps reduce error' + err;
+        console.log(msg);
+        reject(msg);
+      });
+  }, Promise.resolve());
+
