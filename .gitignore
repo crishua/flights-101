@@ -6,3 +6,5 @@ results/t
 app/routes.js
 npm-debug.log
 routes/*.js
+.DS_Store
+test-jsons
