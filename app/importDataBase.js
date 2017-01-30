@@ -3,12 +3,12 @@
 const fs = require('fs');
 
 const settings = require('./settings');
-var agentsImport = require('./import/agents');
-var carriersImport = require('./import/carriers');
-var placesImport = require('./import/places');
-var legsImport = require('./import/legs');
-var segmentsImport = require('./import/segments');
-var itinerariesImport = require('./import/itineraries');
+const agentsImport = require('./import/agents');
+const carriersImport = require('./import/carriers');
+const placesImport = require('./import/places');
+const legsImport = require('./import/legs');
+const segmentsImport = require('./import/segments');
+const itinerariesImport = require('./import/itineraries');
 
 const dir = settings.importDir;
 const files = fs.readdirSync(dir);
@@ -16,28 +16,27 @@ const files = fs.readdirSync(dir);
 function fileToJSON(file) {
   return new Promise((resolve, reject) => {
     if (file !== '.resultfileshere') {
-
       fs.readFile(dir + '/' + file, 'utf8', (err, data) => {
         if (err) {
           reject(err);
         }
         //decode JSON
         try {
-          resolve(JSON.parse(data));
+          const json = JSON.parse(data);
+          resolve(json);
         } catch (error) {
           reject(error);
         }
-
-      })
+      });
     }
   });
 }
 
-var dumpFiles = function (files) {
+const dumpFiles = function (files) {
   return files.map((file) => {
     // console.log(file + ' reading');
     return new Promise((resolve, reject) => {
-      var json = {};
+      let json = {};
       fileToJSON(file)
         .then((res) => {
           json = res;
@@ -83,7 +82,6 @@ dumpFiles(files)
       .catch((err) => {
         let msg = 'dumps reduce error' + err;
         console.log(msg);
-        reject(msg);
       });
   }, Promise.resolve());
 
