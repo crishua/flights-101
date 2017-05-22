@@ -1,0 +1,26 @@
+
+DROP TABLE scanner.pricingoption_v2;
+
+CREATE TABLE scanner.pricingoption_v2
+(
+Id INT(11),
+ItineraryId INT(11),
+Rank INT(11),
+Agent VARCHAR(100),
+Price FLOAT,
+PRIMARY KEY (Id));
+
+
+INSERT INTO scanner.pricingoption_v2
+(Id,ItineraryId, Rank, Agent, Price)
+
+SELECT  
+		
+        a.Id
+	,a.ItineraryId
+       ,a.RowNumber AS Rank
+       ,b.Name AS Agent
+       ,a.Price
+ FROM scanner.pricingoption_v1 a
+ INNER JOIN scanner.agent b ON a.AgentId = b.Id
+ WHERE a.Id NOT IN (SELECT Id FROM scanner.pricingoption_v2)

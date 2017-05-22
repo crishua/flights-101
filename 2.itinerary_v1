@@ -1,0 +1,39 @@
+DROP TABLE scanner.itinerary_v1;
+
+CREATE TABLE IF NOT EXISTS scanner.itinerary_v1
+(
+Id INT(11),
+OutboundLegId VARCHAR(200),
+InboundLegId VARCHAR(200),
+Itinerary VARCHAR (200),
+Searchdate DATE,
+Country VARCHAR(100),
+PRIMARY KEY (Id));
+
+
+INSERT INTO scanner.itinerary_v1
+(Id,OutboundLegId,InboundLegId,Itinerary,Searchdate,Country)
+
+SELECT 
+			  Distinct(a.Id),
+			  a.OutboundLegId,
+			  a.InboundLegId,
+			  CONCAT(a.OutboundLegId,a.InboundLegId,SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1)))) AS Itinerary,
+			  DATE_FORMAT(CONCAT(substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',-1),'-',
+				CASE
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='January' THEN '01'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='February' THEN '02'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='March' THEN '03'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='April' THEN '04'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='May' THEN '05'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='June' THEN '06'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='July' THEN '07'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='August' THEN '08'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='September' THEN '09'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='October' THEN '10'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='November' THEN '11'
+					WHEN substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',1)='December' THEN '12'
+				END,'-',substring_index(substring_index(SUBSTR(a.FileName,LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+2,((INSTR(a.FileName,'201')+3)-(LENGTH(SUBSTRING_INDEX(a.FileName,'_',3))+1))),'-',-2),'-',1)),'%Y-%m-%d') AS Searchdate,
+			  a.Country
+		 FROM scanner.itinerary a
+

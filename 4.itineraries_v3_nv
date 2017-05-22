@@ -1,0 +1,87 @@
+
+DROP TABLE scanner.itinerary_v3_nv;
+
+CREATE TABLE IF NOT EXISTS scanner.itinerary_v3_nv
+(
+Id INT(11),
+Searchdate Date NOT NULL,
+ItineraryId INT(11),
+Origin VARCHAR(100),
+Destination VARCHAR(100),
+Route VARCHAR(100),
+Country VARCHAR(100),
+Rank INT(11),
+Agent VARCHAR(100),
+Price FLOAT,
+Departure_date Date NOT NULL,
+Return_date Date NOT NULL,
+Travelperiod INT(11),
+Leadtime INT(11),
+Leadtime_range INT(11),
+Key_value VARCHAR(100),
+Stop_out VARCHAR(100),
+Stop_in VARCHAR(100),
+Carrier1_out VARCHAR(100),
+Operating_Carrier1_out VARCHAR(100),
+Departure_time_out TIME,
+Duration_out VARCHAR(100),
+Carrier1_in VARCHAR(100),
+Operating_Carrier1_in VARCHAR(100),
+Departure_time_in TIME,
+Duration_in INT(11),
+Total_duration_hrs FLOAT,
+PRIMARY KEY (Id));
+
+
+
+INSERT INTO scanner.itinerary_v3_nv
+(Id,Searchdate,ItineraryId,Origin,Destination,Route,Country,Rank,Agent,Price,Departure_date,Return_date,Travelperiod, Leadtime, Leadtime_range,Key_value,Stop_out,
+Stop_in,Carrier1_out,Operating_Carrier1_out,Departure_time_out,Duration_out,Carrier1_in,Operating_Carrier1_in,Departure_time_in,Duration_in,Total_duration_hrs)
+
+
+SELECT 
+        a.Id,
+        a.Searchdate ,
+        a.ItineraryId,
+        a.Origin,
+        a.Destination,
+        a.Route,
+        a.Country,
+        a.Rank,
+        a.Agent,
+        a.Price,
+        a.Departure_date,
+        a.Return_date,
+        DATEDIFF(a.Return_date, a.Departure_date) AS Travelperiod,
+        DATEDIFF(a.Departure_date, a.Searchdate) AS Leadtime,  
+        CASE 
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)<='29' THEN '0'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='30' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='59'  THEN '30'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='60' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='89'  THEN '60'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='90' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='119'  THEN '90'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='120' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='149'  THEN '120'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='150' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='179'  THEN '150'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='180' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='209'  THEN '180'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='210' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='239'  THEN '210'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='240' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='269'  THEN '240'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='270' AND  DATEDIFF(a.Departure_date, a.Searchdate)<='299'  THEN '270'
+			WHEN DATEDIFF(a.Departure_date, a.Searchdate)>='300' THEN '300'
+		END Leadtime_range,
+        a.Key_value,
+		b.Stops AS Stop_out,
+		c.Stops AS Stop_in,
+		b.Carrier1 AS Carrier1_out,
+        b.Operating_Carrier1 AS Operating_Carrier1_out,
+		STR_TO_DATE(b.Departure_time, '%H:%i:%s') AS Departure_time_out,
+		b.Duration AS Duration_out,
+		c.Carrier1 AS Carrier1_in,
+        c.Operating_Carrier1 AS Operating_Carrier1_in,
+        STR_TO_DATE(c.Departure_time, '%H:%i:%s') AS Departure_time_in,
+		c.Duration AS Duration_in,
+        (b.Duration + c.Duration) / 60 AS Total_duration_hrs
+
+FROM scanner.itinerary_v2 a
+LEFT JOIN scanner.leg_vcris_nv b ON a.OutboundLegId=b.Id
+LEFT JOIN (SELECT * FROM scanner.leg_vcris_nv) c ON a.InboundLegId=c.Id
+WHERE b.Directionality IN ('Outbound')
+AND c.Directionality IN ('Inbound') 

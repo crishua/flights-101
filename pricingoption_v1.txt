@@ -1,0 +1,28 @@
+
+DROP TABLE scanner.pricingoption_v1;
+
+CREATE TABLE scanner.pricingoption_v1
+(
+RowNumber INT(11),
+Id INT(11),
+ItineraryId INT(11),
+Price FLOAT,
+AgentId INT(11),
+Itinerary INT(11),
+PRIMARY KEY (Id));
+
+
+INSERT INTO scanner.pricingoption_v1
+(RowNumber,Id, ItineraryId, Price, AgentId, Itinerary)
+
+SELECT  
+		@row_num := IF(@prev_value= a.ItineraryId , @row_num+1 ,1) AS RowNumber
+	   ,a.Id
+       ,a.ItineraryId
+       ,a.Price
+       ,a.AgentId
+       ,@prev_value := a.ItineraryId AS Itinerary
+ FROM scanner.pricingoption a,
+      (SELECT @row_num := 1) x,
+      (SELECT @prev_value := '') y
+ORDER BY a.ItineraryId, a.Price ASC

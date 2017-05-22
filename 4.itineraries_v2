@@ -1,0 +1,49 @@
+
+DROP TABLE scanner.itinerary_v2;
+
+CREATE TABLE IF NOT EXISTS scanner.itinerary_v2
+(
+Id INT(11),
+Searchdate Date NOT NULL,
+ItineraryId INT(11),
+OutboundLegId VARCHAR(100),
+InboundLegId VARCHAR(100),
+Origin VARCHAR(100),
+Destination VARCHAR(100),
+Route VARCHAR(100),
+Country VARCHAR(100),
+Rank INT(11),
+Agent VARCHAR(100),
+Price FLOAT,
+Departure_date Date NOT NULL,
+Return_date Date NOT NULL,
+Key_value VARCHAR(100),
+PRIMARY KEY (Id));
+
+
+INSERT INTO scanner.itinerary_v2
+(Id,Searchdate,ItineraryId,OutboundLegId,InboundLegId,Origin,Destination,Route,Country,Rank,Agent,Price,Departure_date,Return_date,Key_value)
+
+SELECT 
+        Distinct(a.Id),
+        b.Searchdate,
+        a.ItineraryId,
+        b.OutboundLegId,
+        b.InboundLegId,
+        c.Code AS Origin,
+        d.Code AS Destination,
+        CONCAT(c.Code,':',d.Code) AS Route,
+        b.Country,
+        a.Rank,
+        a.Agent,
+        a.Price,
+		DATE_FORMAT(SUBSTR(substring_index(substring_index(b.OutboundLegId,'-',2),'-',-1),1,6), '%Y-%m-%d') AS Departure_date,
+        DATE_FORMAT(SUBSTR(substring_index(substring_index(b.InboundLegId,'-',2),'-',-1),1,6), '%Y-%m-%d') AS Return_date,
+        CONCAT(b.Searchdate,c.Code,d.Code,b.Country,SUBSTR(substring_index(substring_index(b.OutboundLegId,'-',2),'-',-1),1,6),SUBSTR(substring_index(substring_index(b.InboundLegId,'-',2),'-',-1),1,6)) AS Key_value
+
+FROM scanner.pricingoption_v2 a
+INNER JOIN scanner.itinerary_v1 b ON a.ItineraryId=b.Id
+LEFT JOIN scanner.place c ON substring_index(b.OutboundLegId,'-',1) = c.Id
+LEFT JOIN (SELECT Id, Code FROM scanner.place) d ON substring_index(b.InboundLegId,'-',1) = d.Id
+Where a.ItineraryId>='88457189'
+
